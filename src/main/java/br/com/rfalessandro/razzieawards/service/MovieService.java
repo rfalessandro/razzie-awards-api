@@ -1,6 +1,11 @@
 package br.com.rfalessandro.razzieawards.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import br.com.rfalessandro.razzieawards.model.Movie;
+import br.com.rfalessandro.razzieawards.model.Producer;
+import br.com.rfalessandro.razzieawards.model.Studio;
 import br.com.rfalessandro.razzieawards.repository.MovieRepository;
 import br.com.rfalessandro.razzieawards.repository.ProducerRepository;
 import br.com.rfalessandro.razzieawards.repository.StudioRepository;
@@ -25,15 +30,30 @@ public class MovieService {
 
     @Transactional
     public Movie createMovie(Movie movie) {
-        movie.getStudios()
-            .forEach(studio -> studioRepository.findOrCreate(studio.getName()));
-        movie.getProducers()
-            .forEach(producer -> producerRepository.findOrCreate(producer.getName()));
+        loadOrCreateStudios(movie);
+        loadOrCreateProducers(movie);
         movieRepository.persist(movie);
-        log.info("Persisted movie: {}", movie);
+        log.info("Created movie: {}", movie);
         return movie;
     }
 
+    private void loadOrCreateStudios(Movie movie) {
+        List<Studio> studios = movie.getStudios()
+            .stream()
+            .map(studio -> studioRepository.findOrCreate(studio.getName()))
+            .toList();
+
+        movie.setStudios(studios);
+    }
+
+    private void loadOrCreateProducers(Movie movie) {
+        List<Producer> producers = movie.getProducers()
+            .stream()
+            .map(producer -> producerRepository.findOrCreate(producer.getName()))
+            .toList();
+
+        movie.setProducers(producers);
+    }
 
 	public long count() {
         return movieRepository.count();
