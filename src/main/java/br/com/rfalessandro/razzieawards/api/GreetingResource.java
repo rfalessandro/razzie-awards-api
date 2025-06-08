@@ -1,4 +1,4 @@
-package br.com.rfalessandro;
+package br.com.rfalessandro.razzieawards.api;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
