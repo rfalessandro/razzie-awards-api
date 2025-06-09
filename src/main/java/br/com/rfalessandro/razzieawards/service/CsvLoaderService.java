@@ -11,6 +11,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import br.com.rfalessandro.razzieawards.dto.MovieDTO;
+import br.com.rfalessandro.razzieawards.exception.CsvProcessingException;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
@@ -40,10 +41,15 @@ public class CsvLoaderService {
 
 	private void importMoviesFromFile() throws IOException {
         log.info("Loading movies from {}", csvPath);
+        try {
         List<MovieDTO> movies = parseFile(csvPath);
-        movies.forEach(movie ->
-            movieService.createMovie(movie.toModel())
-        );
+            movies.forEach(movie ->
+                movieService.createMovie(movie.toModel())
+            );
+        } catch (Exception e) {
+            log.error("Error loading movies from CSV file", e);
+            throw new CsvProcessingException("Error loading movies from CSV file", e);
+        }
 	}
 
     public List<MovieDTO> parseFile(String csvPath) throws IOException {

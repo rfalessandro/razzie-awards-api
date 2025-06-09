@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import br.com.rfalessandro.razzieawards.exception.CreateMovieException;
 import br.com.rfalessandro.razzieawards.model.Movie;
 import br.com.rfalessandro.razzieawards.model.Producer;
 import br.com.rfalessandro.razzieawards.model.Studio;
@@ -31,20 +32,24 @@ public class MovieService {
 
     @Transactional
     public Movie createMovie(Movie movie) {
-        Optional<Movie> existingMovie = movieRepository
-                                            .find("title = ?1 and year = ?2",
-                                                movie.getTitle(),
-                                                movie.getYear()
-                                            ).singleResultOptional();
-        if (existingMovie.isPresent()) {
-            log.info("Movie already exists: {}", movie);
-            return existingMovie.get();
+        try {
+            Optional<Movie> existingMovie = movieRepository
+            .find("title = ?1 and year = ?2",
+                movie.getTitle(),
+                movie.getYear()
+            ).singleResultOptional();
+            if (existingMovie.isPresent()) {
+                log.info("Movie already exists: {}", movie);
+                return existingMovie.get();
+            }
+            loadOrCreateStudios(movie);
+            loadOrCreateProducers(movie);
+            movieRepository.persist(movie);
+            log.info("Created movie: {}", movie);
+            return movie;
+        } catch (Exception e) {
+            throw new CreateMovieException("Error creating movie: " + movie, e);
         }
-        loadOrCreateStudios(movie);
-        loadOrCreateProducers(movie);
-        movieRepository.persist(movie);
-        log.info("Created movie: {}", movie);
-        return movie;
     }
 
     private void loadOrCreateStudios(Movie movie) {
