@@ -21,7 +21,7 @@ public class ComplexWinnersScenarioTest implements QuarkusTestProfile {
 
     MaxMinProducerAwardsIntervalDTO check_request_and_return_result() {
         return given().when()
-                .get("/api/v1/producers/award-intervals")
+                .get("/api/v1/producers/award-intervals/worst-movie")
                 .then()
                 .assertThat()
                 .statusCode(200)
