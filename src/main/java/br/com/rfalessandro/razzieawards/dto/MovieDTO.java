@@ -34,6 +34,7 @@ public class MovieDTO {
                 .year(this.getYear())
                 .studios(studios)
                 .producers(producers)
+                .winner(this.isWinner())
                 .build();
     }
 

@@ -54,7 +54,4 @@ public class Movie {
 
     private boolean winner;
 
-    public void setWinner(String value) {
-        this.winner = "yes".equalsIgnoreCase(value.trim());
-    }
 }
