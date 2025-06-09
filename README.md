@@ -1,66 +1,83 @@
-# razzie-awards-api
+# Razzie Awards API
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Esta aplicação tem como objetivo importar dados de um arquivo CSV contendo
+informações sobre filmes premiados e disponibilizar, via API RESTful, o
+produtor com maior intervalo entre prêmios e o que conquistou dois prêmios em
+menor tempo.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+O projet foi desenvolvido com Quarkus, uma framework Java que permite criar
+aplicações de alta performance e escala.
 
-## Running the application in dev mode
+## Executando a Aplicação em Modo de Desenvolvimento
 
-You can run your application in dev mode that enables live coding using:
+Você pode executar sua aplicação em modo de desenvolvimento que permite codificação ao vivo usando:
 
 ```shell script
 ./gradlew quarkusDev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## Executando os testes
 
-## Packaging and running the application
+```shell script
+./gradlew test
+```
+ou
 
-The application can be packaged using:
+```shell script
+./gradlew check
+```
+
+## OpenAPI Spec
+
+A documentação da API pode ser encontrada na rota `/q/swagger-ui/` ou na rota `/swagger?format=json`
+
+
+## Spotless
+
+O projeto utiliza o [Spotless](https://github.com/diffplug/spotless) para formatar o código, execute:
+```shell script
+./gradlew spotlessCheck
+```
+O comando acima pode ser usado em qualquer CI, como Jenkins ou GitHub Actions para validar o formato do código.
+O `spotless` ainda conta com uma auto-fix para formatar o código.
+```shell script
+./gradlew spotlessApply
+```
+
+
+## Empacotamento e Execução da Aplicação
+
+A aplicação pode ser empacotada usando:
 
 ```shell script
 ./gradlew build
 ```
 
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+Isso produz o arquivo `quarkus-run.jar` no diretório `build/quarkus-app/`.
+Tenha em mente que não é um _uber-jar_ porque as dependências são copiadas para o diretório `build/quarkus-app/lib/`.
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+A aplicação agora pode ser executada usando `java -jar build/quarkus-run.jar`.
 
-If you want to build an _über-jar_, execute the following command:
+Se você quiser criar um _uber-jar_, execute o seguinte comando:
 
 ```shell script
 ./gradlew build -Dquarkus.package.jar.type=uber-jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+A aplicação, empacotada como um _uber-jar_, pode ser executada usando `java -jar build/*-runner.jar`.
 
-## Creating a native executable
+## Criando um Executável Nativo
 
-You can create a native executable using:
+Você pode criar um executável nativo usando:
 
 ```shell script
 ./gradlew build -Dquarkus.native.enabled=true
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Ou, se você não tiver o GraalVM instalado, você pode executar a construção do executável nativo em um contêiner usando:
 
 ```shell script
 ./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./build/razzie-awards-api-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/gradle-tooling>.
-
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+Você pode então executar seu executável nativo com: `./build/razzie-awards-api-1.0.0-SNAPSHOT-runner`
