@@ -1,6 +1,7 @@
 package br.com.rfalessandro.razzieawards.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import br.com.rfalessandro.razzieawards.model.Movie;
@@ -30,6 +31,15 @@ public class MovieService {
 
     @Transactional
     public Movie createMovie(Movie movie) {
+        Optional<Movie> existingMovie = movieRepository
+                                            .find("title = ?1 and year = ?2",
+                                                movie.getTitle(),
+                                                movie.getYear()
+                                            ).singleResultOptional();
+        if (existingMovie.isPresent()) {
+            log.info("Movie already exists: {}", movie);
+            return existingMovie.get();
+        }
         loadOrCreateStudios(movie);
         loadOrCreateProducers(movie);
         movieRepository.persist(movie);

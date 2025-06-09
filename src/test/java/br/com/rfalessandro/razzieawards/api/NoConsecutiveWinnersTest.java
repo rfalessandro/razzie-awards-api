@@ -22,8 +22,7 @@ public class NoConsecutiveWinnersTest implements QuarkusTestProfile {
     }
 
     @Test
-    void testNoConsecutiveWinners() {
-
+    void testShouldReturnEmptyListForMaxAndMin() {
         MaxMinProducerAwardsIntervalDTO result = given()
           .when().get("/api/v1/producers/award-intervals")
           .then()

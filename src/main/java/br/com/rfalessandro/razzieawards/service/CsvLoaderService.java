@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
@@ -53,10 +54,20 @@ public class CsvLoaderService {
         }
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader().withColumnSeparator(';');
-        return mapper.readerFor(MovieDTO.class)
+        MappingIterator<MovieDTO> iter = mapper.readerFor(MovieDTO.class)
             .with(schema)
-            .<MovieDTO>readValues(csvStream)
-            .readAll();
+            .readValues(csvStream);
+
+        List<MovieDTO> validRows = new java.util.ArrayList<>();
+        while (iter.hasNextValue()) {
+            try {
+                MovieDTO row = iter.nextValue();
+                validRows.add(row);
+            } catch (Exception e) {
+                log.error("Corrupted row: {}", e.getMessage());
+            }
+        }
+        return validRows;
     }
 
 

@@ -78,15 +78,17 @@ public class ProducerRepository implements PanacheRepository<Producer> {
             )
             SELECT
                 *
-            FROM min_interval
-            union all
+            FROM
+                min_interval
+            UNION ALL
             SELECT
                 *
             FROM
                 max_interval
             """)
             .getResultList();
-        resultList.forEach(row -> log.info("##@!: {}", row));
+        resultList.forEach(row -> log.debug("Row: {}", row));
+
         List<ProducerAwardsIntervalDTO> max = new ArrayList<>();
         List<ProducerAwardsIntervalDTO> min = new ArrayList<>();
         resultList.forEach(row2 -> {
