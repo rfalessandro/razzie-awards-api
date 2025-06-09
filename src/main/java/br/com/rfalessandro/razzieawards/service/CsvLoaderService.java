@@ -1,30 +1,26 @@
 package br.com.rfalessandro.razzieawards.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
+import br.com.rfalessandro.razzieawards.dto.MovieDTO;
+import br.com.rfalessandro.razzieawards.exception.CsvProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-
-import br.com.rfalessandro.razzieawards.dto.MovieDTO;
-import br.com.rfalessandro.razzieawards.exception.CsvProcessingException;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 @Slf4j
 public class CsvLoaderService {
 
-    @Inject
-    MovieService movieService;
+    @Inject MovieService movieService;
 
     @ConfigProperty(name = "csv.file.path")
     String csvPath;
@@ -39,18 +35,16 @@ public class CsvLoaderService {
         }
     }
 
-	private void importMoviesFromFile() throws IOException {
+    private void importMoviesFromFile() throws IOException {
         log.info("Loading movies from {}", csvPath);
         try {
-        List<MovieDTO> movies = parseFile(csvPath);
-            movies.forEach(movie ->
-                movieService.createMovie(movie.toModel())
-            );
+            List<MovieDTO> movies = parseFile(csvPath);
+            movies.forEach(movie -> movieService.createMovie(movie.toModel()));
         } catch (Exception e) {
             log.error("Error loading movies from CSV file", e);
             throw new CsvProcessingException("Error loading movies from CSV file", e);
         }
-	}
+    }
 
     public List<MovieDTO> parseFile(String csvPath) throws IOException {
         InputStream csvStream = getClass().getResourceAsStream(csvPath);
@@ -60,9 +54,8 @@ public class CsvLoaderService {
         }
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader().withColumnSeparator(';');
-        MappingIterator<MovieDTO> iter = mapper.readerFor(MovieDTO.class)
-            .with(schema)
-            .readValues(csvStream);
+        MappingIterator<MovieDTO> iter =
+                mapper.readerFor(MovieDTO.class).with(schema).readValues(csvStream);
 
         List<MovieDTO> validRows = new java.util.ArrayList<>();
         while (iter.hasNextValue()) {
@@ -75,6 +68,4 @@ public class CsvLoaderService {
         }
         return validRows;
     }
-
-
 }

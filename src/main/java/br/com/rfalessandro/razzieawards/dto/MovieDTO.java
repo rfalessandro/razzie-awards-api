@@ -1,12 +1,12 @@
 package br.com.rfalessandro.razzieawards.dto;
+
+import br.com.rfalessandro.razzieawards.model.Movie;
+import br.com.rfalessandro.razzieawards.model.Producer;
+import br.com.rfalessandro.razzieawards.model.Studio;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import br.com.rfalessandro.razzieawards.model.Movie;
-import br.com.rfalessandro.razzieawards.model.Producer;
-import br.com.rfalessandro.razzieawards.model.Studio;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -25,7 +25,6 @@ public class MovieDTO {
         this.winner = "yes".equalsIgnoreCase(value.trim());
     }
 
-
     public Movie toModel() {
         List<Studio> studios = parseStudio();
         List<Producer> producers = parseProducer();
@@ -38,7 +37,6 @@ public class MovieDTO {
                 .build();
     }
 
-
     private List<Studio> parseStudio() {
         String studiosStr = this.getStudios();
         if (studiosStr == null || studiosStr.trim().isEmpty()) {
@@ -48,11 +46,7 @@ public class MovieDTO {
         return Arrays.stream(studiosStr.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .map(name ->
-                    Studio.builder()
-                        .name(name)
-                        .build()
-                )
+                .map(name -> Studio.builder().name(name).build())
                 .collect(Collectors.toList());
     }
 
@@ -65,14 +59,7 @@ public class MovieDTO {
         return Arrays.stream(producersStr.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .map(name ->
-                    Producer.builder()
-                        .name(name)
-                        .build()
-                )
+                .map(name -> Producer.builder().name(name).build())
                 .collect(Collectors.toList());
     }
-
-
-
 }

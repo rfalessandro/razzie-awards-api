@@ -3,11 +3,18 @@ plugins {
     id("io.quarkus")
     kotlin("plugin.lombok") version "2.1.21"
     id("io.freefair.lombok") version "8.13"
+    id("com.diffplug.spotless") version "7.0.4"
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
+}
+
+spotless {
+    java {
+        googleJavaFormat().aosp()
+    }
 }
 
 val quarkusPlatformGroupId: String by project

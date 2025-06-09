@@ -1,12 +1,9 @@
 package br.com.rfalessandro.razzieawards.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-import java.util.List;
-
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
@@ -16,5 +13,4 @@ import lombok.ToString;
 public class MaxMinProducerAwardsIntervalDTO {
     List<ProducerAwardsIntervalDTO> max;
     List<ProducerAwardsIntervalDTO> min;
-
 }
