@@ -44,6 +44,19 @@ O `spotless` ainda conta com uma auto-fix para formatar o código.
 ./gradlew spotlessApply
 ```
 
+# Usar outro CSV
+Para usar outros CSV faça o override da propriedade `csv.file.path` com o caminho para o CSV desejado.
+
+Parametro da JVM
+```shell script
+-Dcsv.file.path=moviestest.csv
+```
+Environment Variable
+
+```shell script
+CSV_FILE_PATH=moviestest.csv
+```
+Outras opçoes: https://quarkus.io/guides/config-reference
 
 ## Empacotamento e Execução da Aplicação
 
@@ -65,6 +78,7 @@ Se você quiser criar um _uber-jar_, execute o seguinte comando:
 ```
 
 A aplicação, empacotada como um _uber-jar_, pode ser executada usando `java -jar build/*-runner.jar`.
+
 
 ## Criando um Executável Nativo
 

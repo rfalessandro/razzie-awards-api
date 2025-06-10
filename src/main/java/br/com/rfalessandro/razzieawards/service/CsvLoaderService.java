@@ -12,6 +12,9 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -47,11 +50,8 @@ public class CsvLoaderService {
     }
 
     public List<MovieDTO> parseFile(String csvPath) throws IOException {
-        InputStream csvStream = getClass().getResourceAsStream(csvPath);
-        if (csvStream == null) {
-            log.error("CSV file not found at path: {}", csvPath);
-            throw new RuntimeException("CSV file not found: " + csvPath);
-        }
+        InputStream csvStream = getExternalCsvStream(csvPath);
+
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader().withColumnSeparator(';');
         MappingIterator<MovieDTO> iter =
@@ -67,5 +67,22 @@ public class CsvLoaderService {
             }
         }
         return validRows;
+    }
+
+    public InputStream getExternalCsvStream(String csvPath) {
+        try {
+            Path path = Paths.get(csvPath);
+            if (Files.exists(path)) {
+                return Files.newInputStream(path);
+            }
+
+            InputStream resourceStream = getClass().getResourceAsStream("/" + csvPath);
+            if (resourceStream != null) {
+                return resourceStream;
+            }
+            throw new CsvProcessingException("Error loading CSV file: " + csvPath, null);
+        } catch (Exception e) {
+            throw new CsvProcessingException("Error loading CSV file: " + csvPath, e);
+        }
     }
 }
