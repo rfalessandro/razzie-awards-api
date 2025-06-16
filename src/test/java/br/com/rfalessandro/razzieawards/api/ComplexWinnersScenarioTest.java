@@ -67,7 +67,7 @@ public class ComplexWinnersScenarioTest implements QuarkusTestProfile {
                         .filter(ci -> ci.getProducer().equals("Joel Silver"))
                         .toList()
                         .size();
-        assertEquals(1, count, "There should be only one max consecutive winner for Kevin Costner");
+        assertEquals(1, count, "There should be only one max consecutive winner for Joel Silver");
 
         int count2 =
                 result.getMax().stream()
@@ -89,6 +89,6 @@ public class ComplexWinnersScenarioTest implements QuarkusTestProfile {
                         .toList()
                         .size();
         assertEquals(
-                1, count4, "There should be only one min consecutive winner for Kevin Costner");
+                1, count4, "There should be only one min consecutive winner for Joel Silver");
     }
 }
