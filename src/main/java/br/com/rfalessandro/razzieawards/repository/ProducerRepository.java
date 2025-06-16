@@ -27,13 +27,10 @@ public class ProducerRepository implements PanacheRepository<Producer> {
                         });
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Transactional
+    @SuppressWarnings("unchecked")
     public MaxMinProducerAwardsIntervalDTO findMaxMinAwardsProducer() {
-        List resultList =
-                getEntityManager()
-                        .createNativeQuery(
-                                """
+        String query =
+                """
              WITH producer_wins AS (
                 SELECT
                     p.name as producer,
@@ -51,8 +48,8 @@ public class ProducerRepository implements PanacheRepository<Producer> {
                 SELECT
                     producer,
                     following_year - previous_year as diff,
-                    following_year,
-                    previous_year
+                    previous_year,
+                    following_year
                 FROM
                     producer_wins
                 WHERE
@@ -86,33 +83,27 @@ public class ProducerRepository implements PanacheRepository<Producer> {
                 *
             FROM
                 max_interval
-            """)
-                        .getResultList();
-        resultList.forEach(row -> log.debug("Row: {}", row));
+            """;
 
         List<ProducerAwardsIntervalDTO> max = new ArrayList<>();
         List<ProducerAwardsIntervalDTO> min = new ArrayList<>();
-        resultList.forEach(
-                row2 -> {
-                    Object[] row = (Object[]) row2;
-                    if ((Integer) row[4] == 1) {
-                        min.add(
-                                ProducerAwardsIntervalDTO.builder()
-                                        .producer((String) row[0])
-                                        .interval((Short) row[1])
-                                        .previousWin((Short) row[2])
-                                        .followingWin((Short) row[3])
-                                        .build());
-                    } else {
-                        max.add(
-                                ProducerAwardsIntervalDTO.builder()
-                                        .producer((String) row[0])
-                                        .interval((Short) row[1])
-                                        .previousWin((Short) row[2])
-                                        .followingWin((Short) row[3])
-                                        .build());
-                    }
-                });
+        getEntityManager().createNativeQuery(query).getResultList().stream()
+                .forEach(
+                        row -> {
+                            Object[] rowArray = (Object[]) row;
+                            ProducerAwardsIntervalDTO producerAwardsIntervalDTO =
+                                    ProducerAwardsIntervalDTO.builder()
+                                            .producer((String) rowArray[0])
+                                            .interval((Short) rowArray[1])
+                                            .previousWin((Short) rowArray[2])
+                                            .followingWin((Short) rowArray[3])
+                                            .build();
+                            if ((Integer) rowArray[4] == 1) {
+                                min.add(producerAwardsIntervalDTO);
+                            } else {
+                                max.add(producerAwardsIntervalDTO);
+                            }
+                        });
         return MaxMinProducerAwardsIntervalDTO.builder().min(min).max(max).build();
     }
 }
