@@ -88,7 +88,6 @@ public class ComplexWinnersScenarioTest implements QuarkusTestProfile {
                         .filter(ci -> ci.getProducer().equals("Joel Silver"))
                         .toList()
                         .size();
-        assertEquals(
-                1, count4, "There should be only one min consecutive winner for Joel Silver");
+        assertEquals(1, count4, "There should be only one min consecutive winner for Joel Silver");
     }
 }
