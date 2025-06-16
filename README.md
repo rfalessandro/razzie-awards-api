@@ -5,8 +5,25 @@ informações sobre filmes premiados e disponibilizar, via API RESTful, o
 produtor com maior intervalo entre prêmios e o que conquistou dois prêmios em
 menor tempo.
 
-O projet foi desenvolvido com Quarkus, uma framework Java que permite criar
+O projeto foi desenvolvido com Quarkus, uma framework Java que permite criar
 aplicações de alta performance e escala.
+
+## Endpoints
+
+A aplicação disponibiliza os seguintes endpoints:
+- GET `/api/v1/producers/award-intervals/worst-movie`: Retorna o produtor com maior intervalo entre prêmios e o que conquistou dois prêmios em menor tempo.
+- GET `/q/swagger-ui/`: Web interface para a Documentação da API (OpenAPI spec).
+- GET `/swagger?format=json`: Documentação da API (OpenAPI spec) em formato JSON.
+
+### Exemplo de uso
+
+```shell script
+curl -X GET "http://localhost:8080/api/v1/producers/award-intervals/worst-movie"
+```
+Dica: para formatar o json de resposta pode ser usado o `jq`
+```shell script
+curl -X GET "http://localhost:8080/api/v1/producers/award-intervals/worst-movie" | jq
+```
 
 ## Executando a Aplicação em Modo de Desenvolvimento
 
@@ -16,35 +33,7 @@ Você pode executar sua aplicação em modo de desenvolvimento que permite codif
 ./gradlew quarkusDev
 ```
 
-## Executando os testes
-
-```shell script
-./gradlew test
-```
-ou
-
-```shell script
-./gradlew check
-```
-
-## OpenAPI Spec
-
-A documentação da API pode ser encontrada na rota `/q/swagger-ui/` ou na rota `/swagger?format=json`
-
-
-## Spotless
-
-O projeto utiliza o [Spotless](https://github.com/diffplug/spotless) para formatar o código, execute:
-```shell script
-./gradlew spotlessCheck
-```
-O comando acima pode ser usado em qualquer CI, como Jenkins ou GitHub Actions para validar o formato do código.
-O `spotless` ainda conta com uma auto-fix para formatar o código.
-```shell script
-./gradlew spotlessApply
-```
-
-# Usar outro CSV
+### Usar outro CSV
 Para usar outros CSV faça o override da propriedade `csv.file.path` com o caminho para o CSV desejado.
 
 Parametro da JVM
@@ -56,7 +45,24 @@ Environment Variable
 ```shell script
 CSV_FILE_PATH=moviestest.csv
 ```
+* Comando completo usando uberjar
+```shell script
+java -Dcsv.file.path=moviestest.csv -jar razzie-awards-api/build/razzie-awards-api-1.0.0-SNAPSHOT-runner.jar
+```
+
 Outras opçoes: https://quarkus.io/guides/config-reference
+
+
+## Executando os testes
+
+```shell script
+./gradlew test
+```
+ou
+
+```shell script
+./gradlew check
+```
 
 ## Empacotamento e Execução da Aplicação
 
@@ -95,3 +101,16 @@ Ou, se você não tiver o GraalVM instalado, você pode executar a construção 
 ```
 
 Você pode então executar seu executável nativo com: `./build/razzie-awards-api-1.0.0-SNAPSHOT-runner`
+
+
+## Formatando o Código
+
+O projeto utiliza o [Spotless](https://github.com/diffplug/spotless) para formatar o código, execute:
+```shell script
+./gradlew spotlessCheck
+```
+O comando acima pode ser usado em qualquer CI, como Jenkins ou GitHub Actions para validar o formato do código.
+O `spotless` ainda conta com uma auto-fix para formatar o código.
+```shell script
+./gradlew spotlessApply
+```
