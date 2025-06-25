@@ -3,6 +3,7 @@ package br.com.rfalessandro.razzieawards.dto;
 import br.com.rfalessandro.razzieawards.model.Movie;
 import br.com.rfalessandro.razzieawards.model.Producer;
 import br.com.rfalessandro.razzieawards.model.Studio;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
+@RegisterForReflection
 public class MovieDTO {
     private String title;
     private short year;

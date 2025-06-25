@@ -91,13 +91,13 @@ A aplicação, empacotada como um _uber-jar_, pode ser executada usando `java -j
 Você pode criar um executável nativo usando:
 
 ```shell script
-./gradlew build -Dquarkus.native.enabled=true
+./gradlew build -Dquarkus.package.type=native
 ```
 
 Ou, se você não tiver o GraalVM instalado, você pode executar a construção do executável nativo em um contêiner usando:
 
 ```shell script
-./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
+./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
 ```
 
 Você pode então executar seu executável nativo com: `./build/razzie-awards-api-1.0.0-SNAPSHOT-runner`
